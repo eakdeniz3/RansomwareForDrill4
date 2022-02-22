@@ -1,0 +1,85 @@
+﻿@inherits LayoutComponentBase
+@using Shared.Menu.Model
+@using Microsoft.Extensions.Configuration
+
+
+<div class="d-flex flex-column flex-root" data-kt-aside-minimize="@NavMenuCssClass">
+    <div class="page d-flex flex-row flex-column-fluid">
+@*        <RFD.WebUI.Shared.Menu.NavMenu ToggleNavMenu="ToggleNavMenuParent" Menu="menu"></RFD.WebUI.Shared.Menu.NavMenu>
+*@       @*// @userName*@
+
+        <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+@*            <RFD.WebUI.Shared.Toolbar.MetronicToolbar></RFD.WebUI.Shared.Toolbar.MetronicToolbar>
+*@            
+            @Body
+        </div>
+    </div>
+</div>
+
+
+@code { private bool collapseNavMenu = false;
+    private string NavMenuCssClass => collapseNavMenu ? "on" : "off";
+    private string ToggleButtonActiveCssClass => collapseNavMenu ? "active" : "";
+
+    //[CascadingParameter]
+    //private Task<AuthenticationState> authenticationState { get; set; }
+
+    // string userName => authenticationState?.Result?.User?.Identity?.Name;
+    [Inject] IConfiguration _configuration { get; set; }
+
+    public string apiKey = "";
+    public List<NavMenuModel> menu;
+
+    private void ToggleNavMenuParent()
+    {
+        collapseNavMenu = !collapseNavMenu;
+
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        apiKey = _configuration.GetValue<string>("ApiKey");
+        menu = new List<NavMenuModel>()
+{
+        new NavMenuModel
+        {
+
+            Title="Gösterge Paneli",
+
+            Menu=new List< Shared.Menu.Model.Menu>
+{
+                new Shared.Menu.Model.Menu
+                {
+                 Name="Anasayfa",
+                 Link=$"/index?ApiKey={apiKey}",
+                 IsActive=true,
+                },
+                new Shared.Menu.Model.Menu
+                {
+                 Name="Insider",
+                 Link=$"/insider?ApiKey={apiKey}",
+                 IsActive=true,
+                },
+                 new Shared.Menu.Model.Menu
+                 {
+                     Name="Uygulamanın Çalıştığı Bilgisayarlar",
+                     IsActive=true,
+                     Link=$"/summary?ApiKey={apiKey}",
+
+                 },
+                new Shared.Menu.Model.Menu
+                {
+                    Name="Log",
+                    IsActive=true,
+                    Link=$"/log?ApiKey={apiKey}",
+
+                }
+        }
+     }
+};
+        return base.OnInitializedAsync();
+    }
+
+
+}
+

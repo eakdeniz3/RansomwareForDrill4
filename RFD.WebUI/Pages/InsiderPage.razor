@@ -1,0 +1,610 @@
+﻿@page "/insider"
+
+@using RFD.Entities.Enum
+@using RFD.WebUI.Components
+@attribute [Authorize]
+
+
+
+
+
+
+
+<div class="g-5 g-xxl-8">
+    <div id="kt_content_container" class="container">
+        <div class="card">
+
+
+
+            <div class="card-header border-0 pt-6">
+
+                <div class="d-flex flex-wrap flex-stack" style="width:100%">
+                    <div class="d-flex flex-column flex-grow-1 pe-8">
+                        <div class="d-flex flex-wrap">
+                            <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <!--!--><span class="svg-icon svg-icon-3 svg-icon-success me-2">
+                                        @*<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                                            <rect fill="#000000" opacity="0.5" x="11" y="5" width="2" height="14" rx="1"></rect>
+                                            <path d="M6.70710678,12.7071068 C6.31658249,13.0976311 5.68341751,13.0976311 5.29289322,12.7071068 C4.90236893,12.3165825 4.90236893,11.6834175 5.29289322,11.2928932 L11.2928932,5.29289322 C11.6714722,4.91431428 12.2810586,4.90106866 12.6757246,5.26284586 L18.6757246,10.7628459 C19.0828436,11.1360383 19.1103465,11.7686056 18.7371541,12.1757246 C18.3639617,12.5828436 17.7313944,12.6103465 17.3242754,12.2371541 L12.0300757,7.38413782 L6.70710678,12.7071068 Z" fill="#000000" fill-rule="nonzero"></path>
+                                            </g>
+                                            </svg>*@
+                                    </span>
+                                    @{
+                                        var totalCount = !_insiders.Any(x => x.IsChecked) ? _insiders.Sum(x => x.Transections.Count()) : _insiders.Where(x => x.IsChecked).Sum(x => x.Transections.Count());
+                                        var complateCount = !_insiders.Any(x => x.IsChecked) ? _insiders.Sum(x => x.Transections.Count(x => x.TransectionType == TransectionType.Success)) : _insiders.Where(x => x.IsChecked).Sum(x => x.Transections.Count(x => x.TransectionType == TransectionType.Success));
+                                        var rate = totalCount != default(double) ? Math.Ceiling((double)complateCount / totalCount * 100) : default(double);
+                                    }
+
+                                    <div class="fs-2 fw-bolder counted" data-kt-countup="true" data-kt-countup-value="4500" data-kt-countup-prefix="$">@totalCount</div>
+                                </div><!--!-->
+                                <!--!--><div class="fw-bold fs-6 text-gray-400">Total Bilgisayar</div>
+                            </div><!--!-->
+
+                            <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <!--!--><span class="svg-icon svg-icon-3 svg-icon-danger me-2">
+                                        @*<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                                            <rect fill="#000000" opacity="0.5" x="11" y="5" width="2" height="14" rx="1"></rect>
+                                            <path d="M6.70710678,18.7071068 C6.31658249,19.0976311 5.68341751,19.0976311 5.29289322,18.7071068 C4.90236893,18.3165825 4.90236893,17.6834175 5.29289322,17.2928932 L11.2928932,11.2928932 C11.6714722,10.9143143 12.2810586,10.9010687 12.6757246,11.2628459 L18.6757246,16.7628459 C19.0828436,17.1360383 19.1103465,17.7686056 18.7371541,18.1757246 C18.3639617,18.5828436 17.7313944,18.6103465 17.3242754,18.2371541 L12.0300757,13.3841378 L6.70710678,18.7071068 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000003, 14.999999) scale(1, -1) translate(-12.000003, -14.999999)"></path>
+                                            </g>
+                                            </svg>*@
+                                    </span>
+                                    <div class="fs-2 fw-bolder counted" data-kt-countup="true" data-kt-countup-value="80">@complateCount</div>
+                                </div><!--!-->
+                                <!--!--><div class="fw-bold fs-6 text-gray-400">Gönderilen Bilgisayar</div>
+                            </div><!--!-->
+                        </div>
+                    </div><!--!-->
+                    <!--!--><div class="d-flex align-items-center w-200px w-sm-300px flex-column mt-3">
+                        <div class="d-flex justify-content-between w-100 mt-auto mb-2">
+                            <span class="fw-bold fs-6 text-gray-400">Tamamlanma Oranı</span>
+                            <span class="fw-bolder fs-6">@rate%</span>
+                        </div>
+                        <div class="h-5px mx-3 w-100 bg-light mb-3"><div class="bg-success rounded h-5px" role="progressbar" style="width: @rate%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div></div>
+                    </div>
+                </div>
+                <div class="card-title">
+                    <div class="d-flex align-items-center position-relative my-1">
+
+
+                        <input type="text" class="form-control form-control-solid w-250px " placeholder="Kampanya ara..." @bind="_paramerters.Search">
+                        <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm ms-1">
+                            <span class="svg-icon svg-icon-primary  svg-icon-1 " @onclick="Search">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24"></rect>
+                                        <path d="M14.2928932,16.7071068 C13.9023689,16.3165825 13.9023689,15.6834175 14.2928932,15.2928932 C14.6834175,14.9023689 15.3165825,14.9023689 15.7071068,15.2928932 L19.7071068,19.2928932 C20.0976311,19.6834175 20.0976311,20.3165825 19.7071068,20.7071068 C19.3165825,21.0976311 18.6834175,21.0976311 18.2928932,20.7071068 L14.2928932,16.7071068 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"></path>
+                                        <path d="M11,16 C13.7614237,16 16,13.7614237 16,11 C16,8.23857625 13.7614237,6 11,6 C8.23857625,6 6,8.23857625 6,11 C6,13.7614237 8.23857625,16 11,16 Z M11,18 C7.13400675,18 4,14.8659932 4,11 C4,7.13400675 7.13400675,4 11,4 C14.8659932,4 18,7.13400675 18,11 C18,14.8659932 14.8659932,18 11,18 Z" fill="#000000" fill-rule="nonzero"></path>
+                                    </g>
+                                </svg>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @onclick="()=> { _addModal = true; }">
+                            <span class="svg-icon svg-icon-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <rect fill="#000000" x="4" y="11" width="16" height="2" rx="1"></rect>
+                                    <rect fill="#000000" opacity="0.5" transform="translate(12.000000, 12.000000) rotate(-270.000000) translate(-12.000000, -12.000000)" x="4" y="11" width="16" height="2" rx="1"></rect>
+                                </svg>
+                            </span>
+                            Kampanya Ekle
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+            @if (_insiders?.Count(x => x.IsChecked) > default(int))
+            {
+                <div class="card-header border-0 pt-6">
+
+                    <div class="card-title form-label form-label-no-wrap"><label class="font-bold font-danger"><span> Seçilen Kayıt Sayısı: <b>@_insiders?.Count(x => x.IsChecked)</b></span></label></div>
+                    <div class="card-toolbar">
+
+                        <div class="d-flex justify-content-end m-1" data-kt-customer-table-toolbar="base">
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @onclick="()=>Start(_insiders?.Where(x=>x.IsChecked &&x.Status==StatusType.None).ToList())">
+                                Seçilenleri Çalıştır
+                            </button>
+                        </div>
+                        <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer" @onclick="SelectedDelete">
+                                <span class="svg-icon svg-icon-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="24" height="24"></rect>
+                                            <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z" fill="#000000" fill-rule="nonzero"></path>
+                                            <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" fill="#000000" opacity="0.3"></path>
+                                        </g>
+                                    </svg>
+                                </span>
+                                Seçilenleri Sil
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+            <div class="card-body pt-0">
+                <div id="kt_customers_table_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <div class="table-responsive">
+                        <table class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer" id="kt_customers_table" role="grid">
+                            <thead>
+                                <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0 " role="row">
+                                    <th class="w-10px pe-2 sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 29.25px;">
+                                        <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                                            <input class="form-check-input" type="checkbox" @bind="_check" @onclick="CheckAll">
+                                        </div>
+                                    </th>
+                                    <th class="w-25px" tabindex="0" rowspan="1" colspan="1" style="width: 164.766px;">S/N</th>
+                                    <th class="min-w-125px sorting" tabindex="0" rowspan="1" colspan="1" style="width: 181.328px;">Başlık</th>
+                                    <th class="min-w-125px sorting" tabindex="0" rowspan="1" colspan="1" style="width: 181.328px;">Durum</th>
+
+                                    <th class="min-w-125px sorting" tabindex="0" rowspan="1" colspan="1" style="width: 164.766px;">Oluşturma Tarihi</th>
+                                    <th class="text-end min-w-70px" rowspan="1" colspan="1"></th>
+                                    <th class="text-end min-w-70px" rowspan="1" colspan="1">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody class="fw-bold text-gray-600">
+                                @{
+                                    if (_insiders.Any())
+                                    {
+                                        foreach (var item in _insiders)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                        <input class="form-check-input" type="checkbox" @bind="item.IsChecked">
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <a class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6"> @((_insiders.IndexOf(item)+1)+_metaData.PageSize*(_metaData.CurrentPage-1))</a>
+                                                </td>
+                                                <td>
+                                                    <a class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">  @item.Title</a>
+                                                </td>
+                                                <td>
+                                                    @if (item.Status == StatusType.None)
+                                                    {
+                                                        <span class="badge badge-light-primary fs-7 fw-bold">Başlatılmadı</span>
+                                                    }
+
+                                                    @if (item.Status == StatusType.InProgress)
+                                                    {
+                                                        <span class="badge badge-light-warning fs-7 fw-bold">Devam ediyor...</span>
+                                                    }
+
+                                                    @if (item.Status == StatusType.Pause)
+                                                    {
+                                                        <span class="badge badge-light-danger fs-7 fw-bold">Durduruldu</span>
+                                                    }
+                                                    @if (item.Status == StatusType.Complate)
+                                                    {
+                                                        <span class="badge badge-light-success fs-7 fw-bold">Tamamlandı</span>
+                                                    }
+                                                </td>
+
+
+
+                                                <td>
+                                                    <a class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">@item.CreatedDate</a>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex flex-column w-100 me-2">
+                                                        <div class="d-flex flex-stack mb-2">
+                                                            <span class="text-muted me-2 fs-7 fw-bold">@item.Progress%</span>
+                                                        </div>
+                                                        <div class="progress h-6px w-100">
+                                                            <div class="progress-bar bg-primary" role="progressbar" style="width: @item.Progress%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-end">
+                                                    <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" @onclick="()=>Duplicate(item)">
+                                                        <span class="svg-icon svg-icon-primary svg-icon-2x">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                    <rect x="0" y="0" width="24" height="24" />
+                                                                    <path d="M15.9956071,6 L9,6 C7.34314575,6 6,7.34314575 6,9 L6,15.9956071 C4.70185442,15.9316381 4,15.1706419 4,13.8181818 L4,6.18181818 C4,4.76751186 4.76751186,4 6.18181818,4 L13.8181818,4 C15.1706419,4 15.9316381,4.70185442 15.9956071,6 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" />
+                                                                    <path d="M10.1818182,8 L17.8181818,8 C19.2324881,8 20,8.76751186 20,10.1818182 L20,17.8181818 C20,19.2324881 19.2324881,20 17.8181818,20 L10.1818182,20 C8.76751186,20 8,19.2324881 8,17.8181818 L8,10.1818182 C8,8.76751186 8.76751186,8 10.1818182,8 Z" fill="#000000" />
+                                                                </g>
+                                                            </svg>
+                                                        </span>
+                                                    </a>
+
+                                                    @if (item.Status == StatusType.None)
+                                                    {
+                                                        <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" @onclick="()=>SetUpdateModel(item)">
+                                                            <span class="svg-icon svg-icon-warning svg-icon-3">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                    <path d="M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"></path>
+                                                                    <path d="M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"></path>
+                                                                </svg>
+                                                            </span>
+                                                        </a>
+                                                    }
+
+
+                                                    @if (item.Status == StatusType.None || item.Status == StatusType.Pause)
+                                                    {
+                                                        <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" @onclick="()=>Start(new List<InsiderModel> { item })">
+                                                            <span class="svg-icon svg-icon-success  svg-icon-3">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                        <rect x="0" y="0" width="24" height="24" />
+                                                                        <path d="M9.82866499,18.2771971 L16.5693679,12.3976203 C16.7774696,12.2161036 16.7990211,11.9002555 16.6175044,11.6921539 C16.6029128,11.6754252 16.5872233,11.6596867 16.5705402,11.6450431 L9.82983723,5.72838979 C9.62230202,5.54622572 9.30638833,5.56679309 9.12422426,5.7743283 C9.04415337,5.86555116 9,5.98278612 9,6.10416552 L9,17.9003957 C9,18.1765381 9.22385763,18.4003957 9.5,18.4003957 C9.62084305,18.4003957 9.73759731,18.3566309 9.82866499,18.2771971 Z" fill="#000000" />
+                                                                    </g>
+                                                                </svg>
+                                                            </span>
+                                                        </a>
+                                                    }
+
+
+                                                    @if (item.Status == StatusType.InProgress)
+                                                    {
+                                                        <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" @onclick="()=>PauseCampaignAsync(item)">
+                                                            <span class="svg-icon svg-icon-danger svg-icon-2x">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                        <rect x="0" y="0" width="24" height="24" />
+                                                                        <path d="M8,6 L10,6 C10.5522847,6 11,6.44771525 11,7 L11,17 C11,17.5522847 10.5522847,18 10,18 L8,18 C7.44771525,18 7,17.5522847 7,17 L7,7 C7,6.44771525 7.44771525,6 8,6 Z M14,6 L16,6 C16.5522847,6 17,6.44771525 17,7 L17,17 C17,17.5522847 16.5522847,18 16,18 L14,18 C13.4477153,18 13,17.5522847 13,17 L13,7 C13,6.44771525 13.4477153,6 14,6 Z" fill="#000000" />
+                                                                    </g>
+                                                                </svg><!--end::Svg Icon-->
+                                                </span>
+                                                        </a>
+                                                    }
+
+                                                    @if (item.Status != StatusType.None)
+                                                    {
+                                                        <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" @onclick="()=>ViewTransection(item)">
+                                                            <span class="svg-icon svg-icon-primary svg-icon-3">
+                                                                <!--begin::Svg Icon | path:/home/keenthemes/www/metronic/themes/metronic/theme/html/demo9/dist/../src/media/svg/icons/General/Visible.svg-->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                        <rect x="0" y="0" width="24" height="24" />
+                                                                        <path d="M3,12 C3,12 5.45454545,6 12,6 C16.9090909,6 21,12 21,12 C21,12 16.9090909,18 12,18 C5.45454545,18 3,12 3,12 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" />
+                                                                        <path d="M12,15 C10.3431458,15 9,13.6568542 9,12 C9,10.3431458 10.3431458,9 12,9 C13.6568542,9 15,10.3431458 15,12 C15,13.6568542 13.6568542,15 12,15 Z" fill="#000000" opacity="0.3" />
+                                                                    </g>
+                                                                </svg><!--end::Svg Icon-->
+                                                </span>
+                                                        </a>
+                                                    }
+
+                                                    <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" @onclick="()=>Delete(item)">
+                                                        <span class="svg-icon svg-icon-danger svg-icon-3">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                    <rect x="0" y="0" width="24" height="24"></rect>
+                                                                    <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z" fill="#000000" fill-rule="nonzero"></path>
+                                                                    <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" fill="#000000" opacity="0.3"></path>
+                                                                </g>
+                                                            </svg>
+                                                        </span>
+                                                    </a>
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td valign="top" colspan="10" class="dataTables_empty">
+                                                <div class="d-flex flex-column flex-center">
+                                                    <img src="/assets/media/illustrations/5.png" class="mw-400px">
+                                                    <div class="fs-1 fw-bolder text-dark mb-4">Kayıtlı veri bulunamadı</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
+                            <div class="dataTables_length" id="kt_customers_table_length">
+                                <label>
+                                    <select @bind="_paramerters.PageSize" @onclick="GetAllAsync" name="kt_customers_table_length" aria-controls="kt_customers_table" class="form-select form-select-sm form-select-solid">
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </label>
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
+                            <MetronicPagination MetaData="_metaData" Spread="10" SelectedPage="SelectedPage"></MetronicPagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<MetronicAlertComponent Model="_alert" />
+<MetronicModalComponent @bind-IsShow="_addModal">
+    <Header>
+        <h1 class="fw-bolder text-dark mb-9">Kampanya Ekle</h1>
+    </Header>
+    <Body>
+        <EditForm Model="_addModel" OnValidSubmit="Submit">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+
+            <div class="d-flex flex-column mb-5 fv-row">
+                <label class="fs-5 fw-bold mb-2">Konu</label>
+                <InputText @bind-Value="_addModel.Title" class="form-control form-control-solid" placeholder=""></InputText>
+                <ValidationMessage For="@(()=>_addModel.Title)"></ValidationMessage>
+            </div>
+            <div class="d-flex flex-column mb-10 fv-row fv-plugins-icon-container">
+                <label class="fs-6 fw-bold mb-2">Bilgisayar İsimleri(Virgül ile ayırılarak girilmelidir.)</label>
+
+                <InputTextArea @bind-Value="_addModel.Computers" class="form-control form-control-solid" rows="6" placeholder="" />
+
+                <ValidationMessage For="@(()=>_addModel.Computers)"></ValidationMessage>
+            </div>
+            <button type="submit" class="btn btn-success @(Indicator?"disabled":"")">
+                @if (Indicator)
+                {
+                    <span>
+                        Gönderiliyor...
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                }
+                else
+                {
+                    <span class="indicator-label">Ekle</span>
+                }
+            </button>
+        </EditForm>
+    </Body>
+
+
+</MetronicModalComponent>
+<MetronicModalComponent @bind-IsShow="_updateModal">
+    <Header>
+        <h1 class="fw-bolder text-dark mb-9"> Kampanya Güncelle</h1>
+    </Header>
+    <Body>
+        <EditForm Model="_updateModel" OnValidSubmit="Update">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <div class="d-flex flex-column mb-5 fv-row">
+                <label class="fs-5 fw-bold mb-2">Konu</label>
+                <InputText @bind-Value="_updateModel.Title" class="form-control form-control-solid" placeholder=""></InputText>
+                <ValidationMessage For="@(()=>_updateModel.Title)"></ValidationMessage>
+            </div>
+            <div class="d-flex flex-column mb-10 fv-row fv-plugins-icon-container">
+                <label class="fs-6 fw-bold mb-2">Bilgisayar İsimleri(Virgül ile ayırılarak girilmelidir.)</label>
+
+                <InputTextArea @bind-Value="_updateModel.Computers" class="form-control form-control-solid" rows="6" placeholder="" />
+
+                <ValidationMessage For="@(()=>_updateModel.Computers)"></ValidationMessage>
+            </div>
+
+
+            <button type="submit" class="btn btn-warning @(Indicator?"disabled":"")">
+                @if (Indicator)
+                {
+                    <span>
+                        Gönderiliyor...
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                }
+                else
+                {
+                    <span class="indicator-label">Düzenle</span>
+                }
+            </button>
+        </EditForm>
+    </Body>
+</MetronicModalComponent>
+
+@{
+    var selectInsider = _insiders?.FirstOrDefault(x => x.IsSelect);
+}
+<MetronicModalComponent @bind-IsShow="_transection">
+
+    <Header>
+        <h3 class="card-title align-items-start flex-column">
+            <span class="card-label fw-bolder fs-3 mb-1">@selectInsider?.Title</span>
+        </h3>
+    </Header>
+    <Body>
+        <div class="card mb-5 mb-xl-12">
+            <div class="card-header border-0 pt-5">
+
+
+                <div class="d-flex flex-wrap flex-stack">
+                    @{
+
+                        var selectTotalCount = selectInsider?.Transections?.Count;
+                        var selectedSuccessCount = @selectInsider?.Transections?.Count(x => x.TransectionType == TransectionType.Success);
+                        var selectedUnSuccessCount = @selectInsider?.Transections?.Count(x => x.TransectionType == TransectionType.UnSuccess);
+                        var selectedProgressCount = @selectInsider?.Transections?.Count(x => x.TransectionType == TransectionType.UnSuccess);
+                        var selectedNoneCount = @selectInsider?.Transections?.Count(x => x.TransectionType == TransectionType.None);
+                    }
+
+                    <div class="d-flex flex-column flex-grow-1 pe-8">
+                        <div class="d-flex flex-wrap">
+                            <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <span class="svg-icon svg-icon-3 svg-icon-success me-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                                                <rect fill="#000000" opacity="0.5" x="11" y="5" width="2" height="14" rx="1"></rect>
+                                                <path d="M6.70710678,12.7071068 C6.31658249,13.0976311 5.68341751,13.0976311 5.29289322,12.7071068 C4.90236893,12.3165825 4.90236893,11.6834175 5.29289322,11.2928932 L11.2928932,5.29289322 C11.6714722,4.91431428 12.2810586,4.90106866 12.6757246,5.26284586 L18.6757246,10.7628459 C19.0828436,11.1360383 19.1103465,11.7686056 18.7371541,12.1757246 C18.3639617,12.5828436 17.7313944,12.6103465 17.3242754,12.2371541 L12.0300757,7.38413782 L6.70710678,12.7071068 Z" fill="#000000" fill-rule="nonzero"></path>
+                                            </g>
+                                        </svg>
+                                    </span>
+                                    <div class="fs-2 fw-bolder counted" data-kt-countup="true" data-kt-countup-value="4500" data-kt-countup-prefix="$">@selectTotalCount</div>
+                                </div>
+
+                                <div class="fw-bold fs-6 text-gray-400">Total</div>
+                            </div>
+                            <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <span class="svg-icon svg-icon-3 svg-icon-danger me-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                                                <rect fill="#000000" opacity="0.5" x="11" y="5" width="2" height="14" rx="1"></rect>
+                                                <path d="M6.70710678,18.7071068 C6.31658249,19.0976311 5.68341751,19.0976311 5.29289322,18.7071068 C4.90236893,18.3165825 4.90236893,17.6834175 5.29289322,17.2928932 L11.2928932,11.2928932 C11.6714722,10.9143143 12.2810586,10.9010687 12.6757246,11.2628459 L18.6757246,16.7628459 C19.0828436,17.1360383 19.1103465,17.7686056 18.7371541,18.1757246 C18.3639617,18.5828436 17.7313944,18.6103465 17.3242754,18.2371541 L12.0300757,13.3841378 L6.70710678,18.7071068 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000003, 14.999999) scale(1, -1) translate(-12.000003, -14.999999)"></path>
+                                            </g>
+                                        </svg>
+                                    </span>
+                                    <div class="fs-2 fw-bolder counted" data-kt-countup="true" data-kt-countup-value="80">@selectedNoneCount</div>
+                                </div>
+                                <div class="fw-bold fs-6 text-gray-400">Başlatılmamış</div>
+                            </div>
+                            <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <span class="svg-icon svg-icon-3 svg-icon-danger me-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                                                <rect fill="#000000" opacity="0.5" x="11" y="5" width="2" height="14" rx="1"></rect>
+                                                <path d="M6.70710678,18.7071068 C6.31658249,19.0976311 5.68341751,19.0976311 5.29289322,18.7071068 C4.90236893,18.3165825 4.90236893,17.6834175 5.29289322,17.2928932 L11.2928932,11.2928932 C11.6714722,10.9143143 12.2810586,10.9010687 12.6757246,11.2628459 L18.6757246,16.7628459 C19.0828436,17.1360383 19.1103465,17.7686056 18.7371541,18.1757246 C18.3639617,18.5828436 17.7313944,18.6103465 17.3242754,18.2371541 L12.0300757,13.3841378 L6.70710678,18.7071068 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000003, 14.999999) scale(1, -1) translate(-12.000003, -14.999999)"></path>
+                                            </g>
+                                        </svg>
+                                    </span>
+                                    <div class="fs-2 fw-bolder counted" data-kt-countup="true" data-kt-countup-value="80">@selectedProgressCount</div>
+                                </div>
+                                <div class="fw-bold fs-6 text-gray-400">İşleniyor</div>
+                            </div>
+
+                            <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <span class="svg-icon svg-icon-3 svg-icon-danger me-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                                                <rect fill="#000000" opacity="0.5" x="11" y="5" width="2" height="14" rx="1"></rect>
+                                                <path d="M6.70710678,18.7071068 C6.31658249,19.0976311 5.68341751,19.0976311 5.29289322,18.7071068 C4.90236893,18.3165825 4.90236893,17.6834175 5.29289322,17.2928932 L11.2928932,11.2928932 C11.6714722,10.9143143 12.2810586,10.9010687 12.6757246,11.2628459 L18.6757246,16.7628459 C19.0828436,17.1360383 19.1103465,17.7686056 18.7371541,18.1757246 C18.3639617,18.5828436 17.7313944,18.6103465 17.3242754,18.2371541 L12.0300757,13.3841378 L6.70710678,18.7071068 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000003, 14.999999) scale(1, -1) translate(-12.000003, -14.999999)"></path>
+                                            </g>
+                                        </svg>
+                                    </span>
+                                    <div class="fs-2 fw-bolder counted" data-kt-countup="true" data-kt-countup-value="80">@selectedSuccessCount</div>
+                                </div>
+                                <div class="fw-bold fs-6 text-gray-400">Başarılı</div>
+                            </div>
+                            <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <span class="svg-icon svg-icon-3 svg-icon-danger me-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                                                <rect fill="#000000" opacity="0.5" x="11" y="5" width="2" height="14" rx="1"></rect>
+                                                <path d="M6.70710678,18.7071068 C6.31658249,19.0976311 5.68341751,19.0976311 5.29289322,18.7071068 C4.90236893,18.3165825 4.90236893,17.6834175 5.29289322,17.2928932 L11.2928932,11.2928932 C11.6714722,10.9143143 12.2810586,10.9010687 12.6757246,11.2628459 L18.6757246,16.7628459 C19.0828436,17.1360383 19.1103465,17.7686056 18.7371541,18.1757246 C18.3639617,18.5828436 17.7313944,18.6103465 17.3242754,18.2371541 L12.0300757,13.3841378 L6.70710678,18.7071068 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000003, 14.999999) scale(1, -1) translate(-12.000003, -14.999999)"></path>
+                                            </g>
+                                        </svg>
+                                    </span>
+                                    <div class="fs-2 fw-bolder counted" data-kt-countup="true" data-kt-countup-value="80">@selectedUnSuccessCount</div>
+                                </div>
+                                <div class="fw-bold fs-6 text-gray-400">Başarısız</div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                @if (selectInsider?.Status == StatusType.InProgress)
+                {
+                    <div class="card-toolbar">
+                        <a @onclick="() => PauseCampaignAsync(selectInsider)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm">
+                            <span class="svg-icon svg-icon-primary svg-icon-2x">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24" />
+                                        <path d="M8,6 L10,6 C10.5522847,6 11,6.44771525 11,7 L11,17 C11,17.5522847 10.5522847,18 10,18 L8,18 C7.44771525,18 7,17.5522847 7,17 L7,7 C7,6.44771525 7.44771525,6 8,6 Z M14,6 L16,6 C16.5522847,6 17,6.44771525 17,7 L17,17 C17,17.5522847 16.5522847,18 16,18 L14,18 C13.4477153,18 13,17.5522847 13,17 L13,7 C13,6.44771525 13.4477153,6 14,6 Z" fill="#000000" />
+                                    </g>
+                                </svg><!--end::Svg Icon-->
+                        </span>
+                        </a>
+                    </div>
+                }
+                else if (selectInsider?.Status == StatusType.Pause)
+                {
+                    <div class="card-toolbar">
+                        <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" @onclick="() => Start(new List<InsiderModel> { selectInsider })">
+                            <span class="svg-icon svg-icon-success  svg-icon-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24" />
+                                        <path d="M9.82866499,18.2771971 L16.5693679,12.3976203 C16.7774696,12.2161036 16.7990211,11.9002555 16.6175044,11.6921539 C16.6029128,11.6754252 16.5872233,11.6596867 16.5705402,11.6450431 L9.82983723,5.72838979 C9.62230202,5.54622572 9.30638833,5.56679309 9.12422426,5.7743283 C9.04415337,5.86555116 9,5.98278612 9,6.10416552 L9,17.9003957 C9,18.1765381 9.22385763,18.4003957 9.5,18.4003957 C9.62084305,18.4003957 9.73759731,18.3566309 9.82866499,18.2771971 Z" fill="#000000" />
+                                    </g>
+                                </svg>
+                            </span>
+                        </a>
+                    </div>
+                }
+
+            </div>
+
+            <div class="card-body py-3">
+
+                <div class="table-responsive" style="max-height:500px">
+
+                    <table class="table align-middle gs-0 gy-4">
+
+                        <thead>
+                            <tr class="fw-bolder text-muted bg-light">
+                                <th class="w-25px" tabindex="0" rowspan="1" colspan="1" style="width: 164.766px;">S/N</th>
+                                <th class="ps-4 min-w-325px rounded-start">Bilgisayar</th>
+                                <th class="min-w-150px">Durum</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var transection in selectInsider?.Transections?.OrderBy(x => x.Id))
+                            {
+                                <tr>
+                                    <td>
+                                        <a class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">@(selectInsider?.Transections.IndexOf(transection)+1)</a>
+                                    </td>
+                                    <td>
+                                        <a class="text-dark fw-bolder text-hover-primary d-block mb-1 fs-6">@transection.ComputerName</a>
+                                    </td>
+                                    <td>
+                                        @if (transection?.TransectionType == TransectionType.Progress)
+                                        {
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                        }
+                                        else if (transection?.TransectionType == TransectionType.Success)
+                                        {
+                                            <span class="badge badge-light-success">Başarılı</span>
+                                        }
+                                        else if (transection?.TransectionType == TransectionType.UnSuccess)
+                                        {
+                                            <span class="badge badge-light-danger">Başarısız</span>
+                                        }
+                                        else if (transection?.TransectionType == TransectionType.None)
+                                        {
+                                            <span class="badge badge-light-primary">Başlatılmadı</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </Body>
+</MetronicModalComponent>
+
+

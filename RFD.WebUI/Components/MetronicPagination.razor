@@ -1,0 +1,67 @@
+﻿<div class="dataTables_paginate paging_simple_numbers">
+    <ul class="pagination">
+        @{
+            var first = new PagingLink(1, true, null);
+            var last =  new PagingLink(MetaData.TotalPages, true, null);
+        }
+
+
+         <li  style="cursor: pointer;" class="paginate_button page-item ">
+            <span class="page-link" href="#">
+
+              Toplam kayıt sayısı:@MetaData.TotalCount
+
+            </span>
+        </li>
+
+
+        @if (_links.Count>2)
+        {
+
+        
+
+        <li @onclick="() => OnSelectedPage(first)" style="cursor: pointer;" class="paginate_button page-item @(first.Enabled ? null : "disabled") @(first.Active ? "active" : null) previous">
+            <span class="page-link" href="#">
+
+                <i class="previous"></i><i class="previous"></i>
+
+            </span>
+        </li>
+        @foreach (var link in _links)
+        {
+
+
+
+            <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="paginate_button page-item @(link.Enabled ? null : "disabled") @(link.Active ? "active" : null)   @(link.Text=="Next" ? "next" : null)  @(link.Text=="Previous" ? "previous" : null) ">
+                <span class="page-link" href="#">
+                    @if (link.Text == "Previous")
+                    {
+                        <i class="previous"></i>
+                    }
+                    else if (link.Text == "Next")
+                    {
+                        <i class="next"></i>
+                    }
+                    else
+                    {
+                        @link.Text
+                    }
+                </span>
+            </li>
+
+
+
+        }
+
+          <li @onclick="() => OnSelectedPage(last)" style="cursor: pointer;" class="paginate_button page-item @(last.Enabled ? null : "disabled") @(last.Active ? "active" : null) next ">
+            <span class="page-link" href="#">
+
+                <i class="next"></i><i class="next"></i>
+
+            </span>
+        </li>
+        }
+    </ul>
+</div>
+
+

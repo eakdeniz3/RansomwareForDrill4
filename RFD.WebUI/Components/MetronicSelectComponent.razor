@@ -1,0 +1,92 @@
+﻿@typeparam T
+@*@inherits InputBase<string>*@
+
+<div id="@Id"  tabindex="100" class="d-flex flex-column mb-7 fv-row fv-plugins-icon-container fv-plugins-bootstrap5-row-valid">
+    <span  class="select2 select2-container select2-container--bootstrap5 select2-container--above select2-container--focus" style="width: 100%;">
+        <span class="selection">
+            <span style="min-height:40px" class="select2-selection select2-selection--single form-select form-select-solid fw-bolder" @onclick="() => { IsPopupVisible = !IsPopupVisible; }">
+                <span class="select2-selection__rendered">
+                    @{ string text;
+                        if (SelectedData.Count > 5)
+                        {
+                            text = $"{SelectedData.Count} item seçildi";
+                        }
+                        else
+                        {
+                            text = String.Join(", ", SelectedData.Select(x => String.Join(", ", x.Text)));
+                        }
+
+                        text = string.IsNullOrEmpty(text) ? Placeholder : text;
+                    }
+                    @text
+
+                    <input value="@Value" @oninput="OnValueChanged" style="display:none;" />
+                </span>
+
+            </span> @if (SelectedData.Any())
+            {
+        <span class=" clear-bg" @onclick="Clear" style="color:gray; cursor:default;  position: absolute;  height: 40px; display: flex; align-items: center; font-size: 1.25rem; ">
+           
+        </span>
+            }
+        </span>
+
+    </span>
+
+    @if (IsPopupVisible)
+    {
+        <span class="select2-container select2-container--bootstrap5 select2-container--open" style="position: relative;width:100%; "  >
+            <span class="select2-dropdown select2-dropdown--above">
+                <span class="select2-search select2-search--dropdown">
+                    <span class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 position-absolute  translate-middle-y ms-0" style="top:35px">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"></rect>
+                            <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black"></path>
+                        </svg>
+                    </span>
+                    <input  id="@(Id+"-input")"  @bind-value="Search" @bind-value:event="oninput" type="search" class="form-control form-control-flush ps-10"  style="border-bottom:1px solid #c6c6c6" >
+
+                    @*<input class="select2-search__field" type="search" placeholder="Ara..." tabindex="100">*@
+                </span><span class="select2-results">
+                    <ul class="select2-results__options">
+                        @if (LocalData.Any())
+                        {
+                            foreach (var item in LocalData)
+                            {
+                                if (SelectedData.Any(x => x.Value.Equals(item.Value)))
+                                {
+                                    <li @onclick="()=>SetItem(item)" class="select2-results__option select2-results__option--selectable select2-results__option--selected select2-results__option--highlighted">@item.Text</li>
+
+                                }
+                                else
+                                {
+                                    <li @onclick="()=>SetItem(item)" class="select2-results__option select2-results__option--selectable">@item.Text</li>
+
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            <li class="select2-results__option select2-results__option--selectable">Veri bulunamadı.</li>
+                        }
+                    </ul>
+                </span>
+            </span>
+        </span>
+    }
+</div>
+
+<style>
+    .clear-bg {
+        height: .7rem;
+        width: .7rem;
+        top: 50%;
+        right: 3rem;
+        position: absolute;
+        transform: translateY(-50%);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%235E6278'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+</style>

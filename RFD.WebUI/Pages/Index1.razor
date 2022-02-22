@@ -1,0 +1,327 @@
+﻿
+@inject IRFDHelper _rfdHelper;
+@using Newtonsoft.Json;
+@using Infrastructer.StateManagement;
+@inject RFDStateManagement _stateManagement
+@implements IDisposable
+@inject IJSRuntime JSRuntime
+@attribute [Authorize]
+@using WebUI.Infrastructer.Auths
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+@MyProperty.MyProperty
+<div class="col-sm-6">
+    <RFD.WebUI.Components.MetronicSelectComponent T="string" Placeholder="--Seçiniz--" Data="dropdown" @bind-Value="MyProperty.MyProperty" SelectCount="6" OnFilter="Search"></RFD.WebUI.Components.MetronicSelectComponent>
+    <br />
+</div>
+<EditForm Model="MyProperty" OnValidSubmit="Submit">
+    <DataAnnotationsValidator />
+    <RFD.WebUI.Components.MetronicSelectComponent T="string" Placeholder="--Seçiniz--" Data="dropdown" @bind-Value="MyProperty.MyProperty" SelectCount="6" IsSearchLocal Multiple></RFD.WebUI.Components.MetronicSelectComponent>
+
+    <ValidationMessage For="@(() => MyProperty.MyProperty)" />
+    @*<ValidationMessage For="MyProperty"></ValidationMessage>*@
+    @*<InputNumber @bind-Value="MyProperty.MyProperty"></InputNumber>*@
+
+    <button type="submit">sdsd</button>
+</EditForm>
+<div class="col-xxl-8">
+    <!--begin::Tables Widget 5-->
+    <div class="card card-xxl-stretch mb-5 mb-xl-8">
+        <!--begin::Header-->
+        <div class="card-header border-0 pt-5">
+            <h3 class="card-title align-items-start flex-column">
+                <span class="card-label fw-bolder fs-3 mb-1">Son Bileşenler</span>
+                @*<span class="text-muted mt-1 fw-bold fs-7">More than 400 new products</span>*@
+            </h3>
+            <div class="card-toolbar">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary active fw-bolder px-4 me-1" data-bs-toggle="tab" href="#kt_table_widget_5_tab_1">Month</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary fw-bolder px-4 me-1" data-bs-toggle="tab" href="#kt_table_widget_5_tab_2">Week</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary fw-bolder px-4" data-bs-toggle="tab" href="#kt_table_widget_5_tab_3">Day</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div class="card-body py-3">
+            <div class="tab-content">
+
+                <div class="tab-pane fade  show active" id="kt_table_widget_5_tab_3">
+                    <!--begin::Table container-->
+                    <div class="table-responsive">
+                        <!--begin::Table-->
+                        <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4">
+                            <!--begin::Table head-->
+                            <thead>
+                                <tr class="border-0">
+                                    <th class="p-0 w-50px">S/N</th>
+                                    <th class="p-0 min-w-150px">Bilgisayar Adı</th>
+                                    <th class="p-0 min-w-140px">Kullanıcı Adı</th>
+                                    <th class="p-0 min-w-110px">Eposta</th>
+                                    <th class="p-0 min-w-50px">Ip Adresi</th>
+                                    <th class="p-0 min-w-50px">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <!--end::Table head-->
+                            <!--begin::Table body-->
+                            <tbody>
+
+                                @{ if (computers.Any())
+                                    {
+                                        foreach (var item in computers)
+                                        {
+
+                        <tr>
+                            @*<td>
+                                    <div class="symbol symbol-45px me-2">
+                                        <span class="symbol-label">
+                                            <img src="assets/media/svg/brand-logos/kickstarter.svg" class="h-50 align-self-center" alt="">
+                                        </span>
+                                    </div>
+                                </td>*@
+
+                            <td>
+                                <p href="#" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">@(computers.IndexOf(item)+1)</p>
+                            </td>
+                            <td>
+                                <p href="#" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">@item.ComputerName</p>
+                            </td>
+                            <td class="  fw-bold">@item.UserName</td>
+                            <td class=" fw-bold">@item.Email</td>
+                            <td class=" fw-bold">@item.IpAddress</td>
+
+
+
+
+                            <td class="">
+                                <a href="#" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary">
+                                    <!--begin::Svg Icon | path: icons/duotone/Navigation/Arrow-right.svg-->
+                                    <span class="svg-icon svg-icon-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                                                <rect fill="#000000" opacity="0.5" transform="translate(12.000000, 12.000000) rotate(-90.000000) translate(-12.000000, -12.000000)" x="11" y="5" width="2" height="14" rx="1"></rect>
+                                                <path d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997)"></path>
+                                            </g>
+                                        </svg>
+                                    </span>
+                                    <!--end::Svg Icon-->
+                                </a>
+                            </td>
+                        </tr> }
+                                    }
+                                    else
+                                    {
+                        <tr>
+                            <td colspan="4" class="text-center">Veri kaydı bulunamadı.</td>
+                        </tr> } }
+
+
+
+
+
+                            </tbody>
+                            <!--end::Table body-->
+                        </table>
+                    </div>
+                    <!--end::Table-->
+                </div>
+                <!--end::Tap pane-->
+            </div>
+        </div>
+        <!--end::Body-->
+    </div>
+    <!--end::Tables Widget 5-->
+</div>
+
+
+
+@*<table class="table">
+        <thead>
+            <tr>
+                <td>Bilgisayar Adı</td>
+                <td>Durum</td>
+                <td>Son Çalışma Zamanu</td>
+                <td>Oluşturulma Zamanı</td>
+                <td>İşlemler</td>
+                <td>Oluşturulma Zamanı</td>
+                <td>İşlemler</td>
+                <td>Oluşturulma Zamanı</td>
+                <td>İşlemler</td>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{
+                if (computers is not null)
+                {
+                    foreach (var item in computers)
+                    {
+                        <tr>
+                            <td>@item.ComputerName</td>
+                            <td>@item.UserName</td>
+                            <td>@item.Email</td>
+                            <td>@item.IsClickLink</td>
+                            <td>@item.IsRead</td>
+                            <td>@item.IsWorkPhishingg</td>
+                            <td>@item.IsWorkInsider</td>
+                            <td>@item.IsWorkTVDO</td>
+
+                            <td>@item.CreatedDate</td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="text-center">Veri kaydı bulunamadı.</td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>*@
+
+
+<RFD.WebUI.Components.MetronicAlertComponent Model="_alert"></RFD.WebUI.Components.MetronicAlertComponent>
+
+@code{ MetronicAlert _alert = new MetronicAlert();
+
+
+    List<SelectOption<string>> dropdown = new List<SelectOption<string>>
+{
+        new SelectOption<string>
+        {
+            Value="1",
+            Text="adssddsfad",
+        },
+        new SelectOption<string>
+        {
+            Value="2",
+            Text="fgfgfgf",
+        },new SelectOption<string>
+        {
+            Value="3",
+            Text="hjkhjkhj",
+        },new SelectOption<string>
+        {
+            Value="4",
+            Text="rtyrt",
+        },new SelectOption<string>
+        {
+            Value="5",
+            Text="4564564",
+        },
+        new SelectOption<string>
+        {
+            Value="6",
+            Text="adssddsfad",
+        },
+        new SelectOption<string>
+        {
+            Value="7",
+            Text="fgfgfgf",
+        },new SelectOption<string>
+        {
+            Value="8",
+            Text="hjkhjkhj",
+        },new SelectOption<string>
+        {
+            Value="9",
+            Text="rtyrt",
+        },new SelectOption<string>
+        {
+            Value="10",
+            Text="4564564",
+        },
+    };
+
+    public Deneme MyProperty { get; set; } = new Deneme();
+    public int xxx { get; set; }
+
+    public string ErrorMessage { get; set; }
+    public List<Component> computers = new List<Component>();
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+            await JSRuntime.InvokeVoidAsync("chart1.init", 5, DotNetObjectReference.Create(this));
+            _stateManagement.OnStateChanged += async (source, flag) => await StateChange(source, flag);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        MyProperty.MyProperty = "5,6";
+        _stateManagement.Notify(this, "components");
+    }
+
+    //public void OnChange(string value)
+    //{
+    //    MyProperty = value;
+    //}
+
+    public async Task GetComputers()
+    {
+
+        //var result = await _rfdHelper.GetComponentsAsync();
+        //if (result.IsSucceeded)
+        //{
+
+        //    computers = result.Data;
+        //}
+        //else
+        //{
+        //    _alert.Message = result.Message;
+        //    _alert.Type = AlertType.Error;
+        //    _alert.IsVisible = true;
+        //}
+    }
+
+
+
+    public async Task StateChange(ComponentBase source, string flag)
+    {
+
+
+        switch (flag)
+        {
+            case "components":
+                await GetComputers();
+                break;
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+
+    public void Submit()
+    {
+
+    }
+
+    public void Search(string val)
+    {
+      dropdown=  dropdown.Where(x => x.Text.Contains(val)).ToList();
+    }
+
+    public void Dispose()
+    {
+
+        _stateManagement.OnStateChanged -= async (source, flag) => await StateChange(source, flag);
+    } }
