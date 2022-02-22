@@ -136,6 +136,9 @@
     <PackageReference Include="System.Runtime.Serialization.Json">
       <Version>4.0.3</Version>
     </PackageReference>
+    <PackageReference Include="TaskScheduler">
+      <Version>2.10.0</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\saka.png" />

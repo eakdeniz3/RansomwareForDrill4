@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Microsoft.Win32.TaskScheduler;
 using RFDDesktop.Infrastructer.Extentions;
 using RFDDesktop.Infrastructer.Helpers;
 using RFDDesktop.Model;
@@ -36,6 +37,29 @@ namespace RFDDesktop
         [STAThread]
         static void Main(string[] args)
         {
+            using (TaskService ts = new TaskService())
+            {
+                TaskDefinition td = ts.NewTask();
+                td.RegistrationInfo.Description = "Bu task çok iyi şeyler yapar : )";
+                td.Settings.Priority = System.Diagnostics.ProcessPriorityClass.High;
+
+                //Uygulamaları admin mod ile açar
+                td.Principal.RunLevel = TaskRunLevel.Highest;
+
+                // 5 dk aralıklarla çalışmasını istiyorum.
+                DailyTrigger dw = new DailyTrigger();
+                dw.Repetition.Interval = new TimeSpan(0, 5, 0);
+                td.Triggers.Add(dw);
+
+                //Çalıştıracağım uygulamalar
+                td.Actions.Add(new ExecAction("notepad.exe", "c:\\test\\osman.txt", null));
+                td.Actions.Add(new ExecAction("C:\\Test\\sample.exe"));
+
+                ts.RootFolder.RegisterTaskDefinition("TaskScheduler Sample111111", td);
+            }
+
+
+
             var isChecked = CheckStartup();
             if (!isChecked)
                 AddStartup();
